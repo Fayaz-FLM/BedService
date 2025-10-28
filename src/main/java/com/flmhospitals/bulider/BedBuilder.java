@@ -12,13 +12,14 @@ import com.flmhospitals.model.BedAssignmentHistory;
 
 public class BedBuilder {
 
-	public static Bed buildBedFromDto(BedRequestDTO bedRequestDTO) {
+	public static Bed buildBedFromBedDto(BedRequestDTO bedDto) {
 		
 		return Bed.builder()
-				  .bedNumber(bedRequestDTO.getBedNumber())
-				  .isOccupied(bedRequestDTO.isOccupied())
+				  .bedNumber(bedDto.getBedNumber())
+				  .isOccupied(bedDto.isOccupied())
 				  .patientId(0L)
-				  .bedAssignmentHistoryList(buildBedAssignmentHistory(bedRequestDTO.getBedAssignmentHistoryDTOs()))
+				  .bedAssignmentHistoryList(
+	                        buildBedAssignmentHistory(bedDto.getBedAssignmentHistoryDTOs()))
 				  .build();
 	}
 	
