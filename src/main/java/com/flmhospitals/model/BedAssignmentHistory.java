@@ -37,4 +37,14 @@ public class BedAssignmentHistory {
 	
 	@Column(name = "vacated_at")
 	private LocalDateTime vacatedAt;
+
+	public BedAssignmentHistory(Bed bed, Long patientId, LocalDateTime assignedAt, LocalDateTime vacatedAt) {
+		super();
+		this.bed = bed;
+		this.patientId = patientId;
+		this.assignedAt = assignedAt;
+		this.vacatedAt = vacatedAt;
+	}
+	
+	
 }
