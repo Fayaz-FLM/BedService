@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BedAssignemntHistoryDTO {
+public class BedAssignmentHistoryDTO {
 	
 	private long BedAssignemntHistoryId;
 	
@@ -25,7 +25,7 @@ public class BedAssignemntHistoryDTO {
 	
 	private LocalDateTime vacatedAt;
 
-	public BedAssignemntHistoryDTO(long bedId, int bedNum, String patientId, LocalDateTime assignedAt) {
+	public BedAssignmentHistoryDTO(long bedId, int bedNum, String patientId, LocalDateTime assignedAt) {
 		super();
 		this.bedId = bedId;
 		this.bedNum = bedNum;
@@ -33,7 +33,7 @@ public class BedAssignemntHistoryDTO {
 		this.assignedAt = assignedAt;
 	}
 
-	public BedAssignemntHistoryDTO(LocalDateTime vacatedAt,long bedId, int bedNum, String patientId) {
+	public BedAssignmentHistoryDTO(LocalDateTime vacatedAt,long bedId, int bedNum, String patientId) {
 		super();
 		this.bedId = bedId;
 		this.bedNum = bedNum;
