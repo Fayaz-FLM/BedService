@@ -34,8 +34,7 @@ public class Room {
 	
 	private long roomCapacity;
 	
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name="roomId")
+	@OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
 	private List<Bed> beds;
 
 	public Room(long roomNumber, String roomType, long roomCapacity, List<Bed> beds) {
