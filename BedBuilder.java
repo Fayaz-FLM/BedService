@@ -10,7 +10,8 @@ public class BedBuilder {
 		return Bed.builder()
 				  .bedNumber(bedDto.getBedNumber())
 				  .isOccupied(bedDto.isOccupied())
+				  .
 				  .build();
 	}
-	
+
 }

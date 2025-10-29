@@ -35,6 +35,7 @@ public class Bed {
 	
 	private long patientId;
 	
+	
 	@OneToMany(mappedBy = "bed",cascade = CascadeType.ALL)
 	private List<BedAssignmentHistory> bedAssignmentHistoryList;
 
