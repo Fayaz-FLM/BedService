@@ -27,20 +27,30 @@ public class BedAssignmentController {
 	}
 
 	@PostMapping("/assign/{bedNumber}/{patientId}")
-	public ResponseEntity<Bed> assignBed(@PathVariable(name = "bedNumber") long bedNumber,
-			@PathVariable(name = "patientId") long patientId) {
+	public ResponseEntity<BedDetailsResponseDTO> assignBed(@PathVariable(name = "bedNumber") long bedNumber,
+			@PathVariable(name = "patientId") String patientId) {
 
 		Bed assignedBed = bedAssignmentService.bedAssigntment(bedNumber, patientId);
-		return ResponseEntity.ok(assignedBed);
+		BedDetailsResponseDTO response = BedDetailsResponseDTO.builder()
+				.bedNumber(assignedBed.getBedNumber())
+				.roomNumber(assignedBed.getRoom().getRoomNumber())
+				.isOccupied(assignedBed.isOccupied())
+				.build();
+		return ResponseEntity.ok(response);
 	}
 	
 	@PutMapping("/vacate-bed/{roomNumber}/{bedNumber}")
-	public ResponseEntity<String> vacateBed(
+	public ResponseEntity<BedDetailsResponseDTO> vacateBed(
 	        @PathVariable long roomNumber,
 	        @PathVariable long bedNumber) {
 		
-		bedAssignmentService.vacateBed(roomNumber, bedNumber);
-	    return ResponseEntity.ok().build();
+		Bed vacatedBed = bedAssignmentService.vacateBed(roomNumber, bedNumber);
+		BedDetailsResponseDTO response = BedDetailsResponseDTO.builder()
+				.bedNumber(vacatedBed.getBedNumber())
+				.roomNumber(vacatedBed.getRoom().getRoomNumber())
+				.isOccupied(vacatedBed.isOccupied())
+				.build();
+	    return ResponseEntity.ok(response);
 	}
 	
 	@GetMapping("/bed-history/{bedNumber}")

@@ -64,10 +64,13 @@ public class RoomServiceImpl implements RoomService {
 		Room existingRoom = roomRepository.findById(roomNumber)
 											.orElseThrow(()-> new RoomNotFoundException("Room Not Found with Room Number :"+roomNumber));
 	
-//		Room updatedRoom = RoomBuilder.buildRoomFromRoomDTO(roomRequestDto);
-//		updatedRoom.setRoomNumber(existingRoom.getRoomNumber());
-//		
-//		Room room = roomRepository.save(updatedRoom);
+		// Check if reducing capacity below current bed count
+		int currentBedCount = existingRoom.getBeds() != null ? existingRoom.getBeds().size() : 0;
+		if (roomRequestDto.getRoomCapacity() < currentBedCount) {
+			throw new IllegalArgumentException("Cannot reduce room capacity to " + roomRequestDto.getRoomCapacity() + 
+					" as room currently has " + currentBedCount + " beds");
+		}
+
 		existingRoom.setRoomType(roomRequestDto.getRoomType());
 		existingRoom.setRoomCapacity(roomRequestDto.getRoomCapacity());
 

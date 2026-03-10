@@ -30,7 +30,7 @@ public class BedAssignmentServiceImpl implements BedAssignmentService {
 	}
 
 	@Override
-	public Bed bedAssigntment(long bedNumber, long patientId) {
+	public Bed bedAssigntment(long bedNumber, String patientId) {
 
 		Bed bed = bedRepository.findById(bedNumber).orElseThrow(() -> new BedNotFoundException("Bed not found"));
 
@@ -39,12 +39,12 @@ public class BedAssignmentServiceImpl implements BedAssignmentService {
 		}
 
 		bed.setOccupied(true);
-		bed.setPatientId(patientId);
+		bed.setPatientId(Long.parseLong(patientId));
 		bedRepository.save(bed);
 
 		BedAssignmentHistory bedHistory = new BedAssignmentHistory();
 		bedHistory.setBed(bed);
-		bedHistory.setPatientId(patientId);
+		bedHistory.setPatientId(Long.parseLong(patientId));
 		bedHistory.setAssignedAt(LocalDateTime.now());
 
 		bedHistoryRepository.save(bedHistory);
@@ -53,9 +53,13 @@ public class BedAssignmentServiceImpl implements BedAssignmentService {
 	}
 
 	@Override
-	public void vacateBed(long roomNumber, long bedNumber) {
+	public Bed vacateBed(long roomNumber, long bedNumber) {
 		Bed bed = bedRepository.findBedWithRoomNumber(bedNumber, roomNumber).orElseThrow(()-> new BedNotFoundException("Bed Not Found with BedNumber :"+bedNumber+" in RoomNumber: "+roomNumber));
 		BedAssignmentHistory activeAssignment = bedHistoryRepository.findTopByBed_BedNumberAndVacatedAtIsNullOrderByAssignedAtDesc(bedNumber);
+
+		if (activeAssignment == null) {
+			throw new IllegalStateException("No active bed assignment found for bed " + bedNumber);
+		}
 
 	    activeAssignment.setVacatedAt(LocalDateTime.now());
 	    
@@ -63,6 +67,8 @@ public class BedAssignmentServiceImpl implements BedAssignmentService {
 	    bed.setPatientId(0);
 	    bedRepository.save(bed);
 	    bedHistoryRepository.save(activeAssignment);
+	    
+	    return bed;
 	}
 
 	@Override

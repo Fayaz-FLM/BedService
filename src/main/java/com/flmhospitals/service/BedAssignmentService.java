@@ -10,9 +10,9 @@ import com.flmhospitals.model.Bed;
 
 public interface BedAssignmentService {
 
-	Bed bedAssigntment(long bedNumber, long patientId);
+	Bed bedAssigntment(long bedNumber, String patientId);
 
-	void vacateBed(long roomNumber, long bedNumber);
+	Bed vacateBed(long roomNumber, long bedNumber);
 
 	List<BedAssignmentHistoryDTO> getHistoryByBedNumber(long bedNumber);
 }
