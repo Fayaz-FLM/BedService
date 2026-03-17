@@ -35,8 +35,6 @@ public class RoomServiceImpl implements RoomService {
 	@Override
 	public RoomResponseDto addRoom(RoomRequestDto roomRequestDto) {
 		
-		System.out.println("RoomRequestDto "+roomRequestDto);
-
 	    Room room = RoomBuilder.buildRoomFromRoomDTO(roomRequestDto);
 
 	    if (roomRequestDto.getBeds() != null) {
@@ -50,7 +48,6 @@ public class RoomServiceImpl implements RoomService {
 	        }
 	        room.setBeds(bedEntities);
 	    }
-	   System.out.println("Room "+room.getBeds());
 	    Room savedRoom = roomRepository.save(room);
 	  	    
 	    return RoomDTOBuilder.buildRoomResponseDtofromRoom(savedRoom);
@@ -73,17 +70,6 @@ public class RoomServiceImpl implements RoomService {
 
 		existingRoom.setRoomType(roomRequestDto.getRoomType());
 		existingRoom.setRoomCapacity(roomRequestDto.getRoomCapacity());
-
-//		// Clear old beds
-//		existingRoom.getBeds().clear();
-//
-//		for (BedRequestDTO dto : roomRequestDto.getBeds()) {
-//		    Bed bed = new Bed();
-//		    bed.setBedNumber(dto.getBedNumber());
-//		    bed.setOccupied(dto.isOccupied());
-//		    bed.setRoom(existingRoom);
-//		    existingRoom.getBeds().add(bed);
-//		}
 
 		Room room = roomRepository.save(existingRoom);
 		return RoomDTOBuilder.buildRoomResponseDtofromRoom(room);
