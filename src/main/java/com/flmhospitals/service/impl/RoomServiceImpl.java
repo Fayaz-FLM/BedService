@@ -35,8 +35,6 @@ public class RoomServiceImpl implements RoomService {
 	@Override
 	public RoomResponseDto addRoom(RoomRequestDto roomRequestDto) {
 		
-		System.out.println("RoomRequestDto "+roomRequestDto);
-
 	    Room room = RoomBuilder.buildRoomFromRoomDTO(roomRequestDto);
 
 	    if (roomRequestDto.getBeds() != null) {
@@ -50,7 +48,6 @@ public class RoomServiceImpl implements RoomService {
 	        }
 	        room.setBeds(bedEntities);
 	    }
-	   System.out.println("Room "+room.getBeds());
 	    Room savedRoom = roomRepository.save(room);
 	  	    
 	    return RoomDTOBuilder.buildRoomResponseDtofromRoom(savedRoom);
@@ -64,23 +61,15 @@ public class RoomServiceImpl implements RoomService {
 		Room existingRoom = roomRepository.findById(roomNumber)
 											.orElseThrow(()-> new RoomNotFoundException("Room Not Found with Room Number :"+roomNumber));
 	
-//		Room updatedRoom = RoomBuilder.buildRoomFromRoomDTO(roomRequestDto);
-//		updatedRoom.setRoomNumber(existingRoom.getRoomNumber());
-//		
-//		Room room = roomRepository.save(updatedRoom);
+		// Check if reducing capacity below current bed count
+		int currentBedCount = existingRoom.getBeds() != null ? existingRoom.getBeds().size() : 0;
+		if (roomRequestDto.getRoomCapacity() < currentBedCount) {
+			throw new IllegalArgumentException("Cannot reduce room capacity to " + roomRequestDto.getRoomCapacity() + 
+					" as room currently has " + currentBedCount + " beds");
+		}
+
 		existingRoom.setRoomType(roomRequestDto.getRoomType());
 		existingRoom.setRoomCapacity(roomRequestDto.getRoomCapacity());
-
-//		// Clear old beds
-//		existingRoom.getBeds().clear();
-//
-//		for (BedRequestDTO dto : roomRequestDto.getBeds()) {
-//		    Bed bed = new Bed();
-//		    bed.setBedNumber(dto.getBedNumber());
-//		    bed.setOccupied(dto.isOccupied());
-//		    bed.setRoom(existingRoom);
-//		    existingRoom.getBeds().add(bed);
-//		}
 
 		Room room = roomRepository.save(existingRoom);
 		return RoomDTOBuilder.buildRoomResponseDtofromRoom(room);

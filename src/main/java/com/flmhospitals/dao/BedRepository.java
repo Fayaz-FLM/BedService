@@ -16,9 +16,6 @@ public interface BedRepository extends JpaRepository<Bed, Long>{
 	@Query(value = "SELECT b from Bed b where b.bedNumber=:bedNumber and b.room.roomNumber=:roomNumber")
 	Optional<Bed> findBedWithRoomNumber(@Param("bedNumber")long bedNumber,@Param("roomNumber")long roomNumber);
 
-
-
-	
 	Bed findByBedNumberAndRoom_RoomNumber(long bedNumber, long roomNumber);
 	
 	List<Bed> findByRoomRoomNumber(long roomNumber);

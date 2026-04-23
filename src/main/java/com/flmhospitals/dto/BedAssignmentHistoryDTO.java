@@ -16,8 +16,6 @@ public class BedAssignmentHistoryDTO {
 	
 	private long bedNumber;
 	
-//	private RoomDetailsResponseDTO roomDetailsResponseDTO;
-	
 	private long patientId;
 	
 	private LocalDateTime assignedAt;

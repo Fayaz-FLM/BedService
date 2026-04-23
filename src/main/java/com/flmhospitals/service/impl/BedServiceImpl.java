@@ -3,6 +3,7 @@ package com.flmhospitals.service.impl;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -37,27 +38,24 @@ public class BedServiceImpl implements BedService {
 
 		Room existingRoom = roomRepository.findByRoomNumber(bedRequestDTO.getRoomNumber());
 		if (existingRoom == null) {
-			return ResponseEntity.ok("Room Number " + bedRequestDTO.getRoomNumber() + " doesn't exists");
+			throw new RoomNotFoundException("Room Number " + bedRequestDTO.getRoomNumber() + " doesn't exist");
 		}
+		
 		List<Bed> bedInExistingRoom = existingRoom.getBeds();
 		for (Bed bed : bedInExistingRoom) {
 			if (bedRequestDTO.getBedNumber() == bed.getBedNumber()) {
-				return ResponseEntity.ok("Bed Number " + bedRequestDTO.getBedNumber() + " already added in Room Number "
-						+ bedRequestDTO.getRoomNumber());
+				throw new IllegalArgumentException("Bed Number " + bedRequestDTO.getBedNumber() + " already exists in Room Number " + bedRequestDTO.getRoomNumber());
 			}
-
 		}
+		
 		if (bedInExistingRoom.isEmpty() || (bedInExistingRoom.size() < existingRoom.getRoomCapacity())) {
 			Bed bed = BedBuilder.buildBedFromBedRequestDto(bedRequestDTO);
 			bed.setRoom(existingRoom);
 			BedResponseDtoBuilder.buildBedDetailsResponseDtoFromBed(bedRepository.save(bed));
-			return ResponseEntity.ok("Sucessfully added Bed Number " + bedRequestDTO.getBedNumber() + " into Room Number "
-					+ bedRequestDTO.getRoomNumber());
-
+			return ResponseEntity.status(HttpStatus.CREATED).body("Successfully added Bed Number " + bedRequestDTO.getBedNumber() + " into Room Number " + bedRequestDTO.getRoomNumber());
 		}
 
-		return ResponseEntity.ok("Cannot add Bed into Room Number " + bedRequestDTO.getRoomNumber()
-				+ " as the room is fulled with beds");
+		throw new IllegalStateException("Cannot add Bed into Room Number " + bedRequestDTO.getRoomNumber() + " as the room is full");
 	}
 
 	@Override
